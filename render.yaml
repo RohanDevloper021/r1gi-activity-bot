@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: activity-engine
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: activity-engine-db
+          property: connectionString
+
+databases:
+  - name: activity-engine-db
+    plan: free
+    databaseName: activity_engine
+    user: activity_engine_user

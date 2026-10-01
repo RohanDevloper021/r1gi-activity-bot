@@ -1,0 +1,68 @@
+{
+  "guilds": [],
+  "configs": [
+    [
+      "cfg-1790858109154-7kzwo",
+      {
+        "id": "cfg-1790858109154-7kzwo",
+        "guildId": "1509855612945829978",
+        "chatXPMin": 5,
+        "chatXPMax": 10,
+        "chatCooldownSeconds": 45,
+        "voiceXPPerInterval": 10,
+        "voiceIntervalSeconds": 60,
+        "minimumVoiceSessionSeconds": 120,
+        "dailyChatXPLimit": 0,
+        "dailyVoiceXPLimit": 0,
+        "diminishingReturnsEnabled": true,
+        "diminishingReturnsThreshold": 1000,
+        "minimumVoiceParticipants": 1,
+        "selfDeafenBlocksXP": true,
+        "selfMuteBlocksXP": false,
+        "removePreviousLevelRoles": false,
+        "levelUpFrequency": "milestones",
+        "levelUpMessageTemplate": "🎉 Congratulations {user}! You reached **Level {level}**! (Total XP: {totalXP})",
+        "vcRoleId": null,
+        "levelUpChannelId": null,
+        "ignoredTextChannels": "[]",
+        "ignoredVoiceChannels": "[]"
+      }
+    ]
+  ],
+  "users": [],
+  "voiceSessions": [],
+  "xpTransactions": [],
+  "levelRoles": [],
+  "rankCardConfigs": [
+    [
+      "1509855612945829978",
+      {
+        "cardWidth": 934,
+        "cardHeight": 282,
+        "cardRadius": 24,
+        "avatarSize": 65,
+        "avatarShape": "circle",
+        "avatarBorderWidth": 4,
+        "progressBarHeight": 22,
+        "progressBarRadius": 11,
+        "bannerMessage": "🎉 LEVEL UP!",
+        "footerMessage": "⭐ Activity Engine • 300 Levels Milestone Progression",
+        "levelUpAnnouncementTemplate": "🎉 Congratulations {user} on reaching **Level {level}**!",
+        "nameFormat": "both",
+        "showRankBadge": true,
+        "showLevelBadge": true,
+        "showTotalXP": true,
+        "showNextLevelXP": true,
+        "showPercentage": true,
+        "backgroundUrl": "",
+        "bgTheme": "midnight",
+        "bgOverlayOpacity": 0.75,
+        "primaryTextColor": "#ffffff",
+        "secondaryTextColor": "#94a3b8",
+        "accentColor": "#6366f1",
+        "accentColorEnd": "#a855f7",
+        "guildId": "1509855612945829978"
+      }
+    ]
+  ]
+}

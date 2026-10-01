@@ -1,0 +1,6 @@
+{
+  "name": "Activity Engine - Discord XP & Leveling Bot",
+  "description": "Production-ready Discord Activity Engine with Chat & Voice XP, customizable Level-Role rewards, anti-abuse protection, leaderboards, and web management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

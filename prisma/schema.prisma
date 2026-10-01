@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  id             String          @id @default(cuid())
+  discordGuildId String          @unique
+  enabled        Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  users          User[]
+  voiceSessions  VoiceSession[]
+  xpTransactions XPTransaction[]
+  levelRoles     LevelRole[]
+  config         GuildConfig?
+
+  @@index([discordGuildId])
+}
+
+model User {
+  id            String          @id @default(cuid())
+  guildId       String
+  discordUserId String
+  totalXP       Int             @default(0)
+  chatXP        Int             @default(0)
+  voiceXP       Int             @default(0)
+  level         Int             @default(0)
+  voiceSeconds  Int             @default(0)
+  lastMessageAt DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  guild         Guild           @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  voiceSessions VoiceSession[]
+  xpTransactions XPTransaction[]
+
+  @@unique([guildId, discordUserId])
+  @@index([guildId, totalXP(sort: Desc)])
+  @@index([guildId, chatXP(sort: Desc)])
+  @@index([guildId, voiceXP(sort: Desc)])
+  @@index([discordUserId])
+}
+
+model VoiceSession {
+  id              String    @id @default(cuid())
+  guildId         String
+  userId          String
+  channelId       String
+  startedAt       DateTime  @default(now())
+  endedAt         DateTime?
+  eligibleSeconds Int       @default(0)
+  xpAwarded       Int       @default(0)
+  active          Boolean   @default(true)
+
+  guild           Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([guildId, active])
+  @@index([userId, active])
+  @@index([channelId])
+}
+
+model XPTransaction {
+  id        String   @id @default(cuid())
+  guildId   String
+  userId    String
+  source    String   // CHAT, VOICE, ADMIN, BONUS, PENALTY
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([guildId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+model LevelRole {
+  id        String   @id @default(cuid())
+  guildId   String
+  level     Int
+  roleId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, level])
+  @@index([guildId, level])
+}
+
+model GuildConfig {
+  id                           String   @id @default(cuid())
+  guildId                      String   @unique
+  
+  // Chat XP Configuration
+  chatXPMin                    Int      @default(5)
+  chatXPMax                    Int      @default(10)
+  chatCooldownSeconds          Int      @default(45)
+
+  // Voice XP Configuration
+  voiceXPPerInterval           Int      @default(10)
+  voiceIntervalSeconds         Int      @default(60)
+  minimumVoiceSessionSeconds   Int      @default(120)
+
+  // Anti-Farming & Limits (0 = Unlimited / No Daily Cap)
+  dailyChatXPLimit             Int      @default(0)
+  dailyVoiceXPLimit            Int      @default(0)
+
+  // Diminishing Returns
+  diminishingReturnsEnabled    Boolean  @default(true)
+  diminishingReturnsThreshold  Int      @default(1000)
+
+  // Voice Rules
+  minimumVoiceParticipants     Int      @default(1)
+  selfDeafenBlocksXP           Boolean  @default(true)
+  selfMuteBlocksXP             Boolean  @default(false)
+
+  // Roles & Channels
+  vcRoleId                     String?
+  levelUpChannelId             String?
+  levelUpMessageTemplate       String   @default("🎉 Congratulations {user}! You reached **Level {level}**! (Total XP: {totalXP})")
+  
+  // Ignored text and voice channels (stored as JSON arrays or comma-delimited strings)
+  ignoredTextChannels          String   @default("[]")
+  ignoredVoiceChannels         String   @default("[]")
+
+  // Level Role Settings
+  removePreviousLevelRoles     Boolean  @default(false)
+
+  guild                        Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
